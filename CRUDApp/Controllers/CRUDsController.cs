@@ -20,9 +20,21 @@ namespace CRUDApp.Controllers
         }
 
         // GET: CRUDs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.CRUD.ToListAsync());
+            if (_context.CRUD == null)
+            {
+                return Problem("Entity set 'produt set '  is null.");
+            }
+
+            var crud = from m in _context.CRUD
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                crud = crud.Where(s => s.Name!.ToUpper().Contains(searchString.ToUpper()));
+            }
+            return View(await crud.ToListAsync());
         }
 
         // GET: CRUDs/Details/5
