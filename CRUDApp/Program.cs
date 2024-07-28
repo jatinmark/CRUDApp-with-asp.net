@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using CRUDApp.Data;
 using CRUDApp.Areas.Identity.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,8 @@ builder.Services.AddDefaultIdentity<CRUDAppUser>(options => options.SignIn.Requi
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddDbContext<CRUDAppContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CRUDAppContext") ?? throw new InvalidOperationException("Connection string 'CRUDAppContext' not found.")));
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
